@@ -49,7 +49,7 @@ public class ServerCommand extends Command {
 				pp.sendMessage(SlashServer.TELEPORTING_NOW.replace("{name}", serverName));
 				pp.connect(server);
 			} else {
-				pp.sendMessage(SlashServer.TELEPORTING_LATER.replace("{name}", serverName).replace("{time}", String.valueOf(waitingTime / 1000)));
+				pp.sendMessage(SlashServer.TELEPORTING_LATER.replace("{name}", serverName).replace("{seconds}", String.valueOf(waitingTime / 1000)));
 				final String pplayerName = pp.getName();
 				tasks.add(pplayerName);
 				ProxyServer.getInstance().getScheduler().schedule(SlashServer.INSTANCE, new Runnable() {

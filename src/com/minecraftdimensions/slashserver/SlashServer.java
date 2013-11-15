@@ -16,7 +16,7 @@ public class SlashServer extends Plugin {
 	public static SlashServer INSTANCE;
 	
 	private YamlConfiguration config;
-	private Map<String, Integer> time = new HashMap<String, Integer>();
+	private Map<String, Integer> time;
 
 	public static String ALREADY_ON_SERVER;
 	public static String TELEPORTING_NOW;
@@ -32,6 +32,14 @@ public class SlashServer extends Plugin {
 	
 	public void reloadConfig() {
 		File configFile = new File(getDataFolder(), "config.yml");
+		if (!configFile.exists()) {
+			configFile.getParentFile().mkdirs();
+			try {
+				configFile.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		config = YamlConfiguration.loadConfiguration(configFile);
 		
 		// init config defaults:
@@ -57,6 +65,7 @@ public class SlashServer extends Plugin {
 		// read config:
 		ConfigurationSection serversSection = config.getConfigurationSection("servers");
 		assert serversSection != null;
+		time = new HashMap<String, Integer>();
 		for (String servername : serversSection.getKeys(false)){
 			time.put(servername, serversSection.getInt(servername));
 		}

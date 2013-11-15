@@ -267,7 +267,7 @@ public class MemorySection implements ConfigurationSection {
 
 	public int getInt(String path, int def) {
 		Object val = get(path, def);
-		return (val instanceof Number) ? toInt(def) : def;
+		return (val instanceof Number) ? toInt(val) : def;
 	}
 
 	public boolean isInt(String path) {
@@ -297,7 +297,7 @@ public class MemorySection implements ConfigurationSection {
 
 	public double getDouble(String path, double def) {
 		Object val = get(path, def);
-		return (val instanceof Number) ? toDouble(def) : def;
+		return (val instanceof Number) ? toDouble(val) : def;
 	}
 
 	public boolean isDouble(String path) {
@@ -312,7 +312,7 @@ public class MemorySection implements ConfigurationSection {
 
 	public long getLong(String path, long def) {
 		Object val = get(path, def);
-		return (val instanceof Number) ? toLong(def) : def;
+		return (val instanceof Number) ? toLong(val) : def;
 	}
 
 	public boolean isLong(String path) {
