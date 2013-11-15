@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 public class ServerCommand extends Command {
 
 	private Set<String> tasks = new HashSet<String>();
-	
+
 	public ServerCommand(String name, String permission, String... aliases) {
 		super(name, permission, aliases);
 	}
@@ -24,24 +24,27 @@ public class ServerCommand extends Command {
 			sender.sendMessage("This command is only available for players.");
 			return;
 		}
-		
+
 		final ProxiedPlayer pp = (ProxiedPlayer) sender;
 		final String serverName = this.getName();
-		if (pp.getServer().getInfo().getName().equalsIgnoreCase(serverName)) {
+		String currentServer = pp.getServer().getInfo().getName();
+		if (currentServer.equalsIgnoreCase(serverName)) {
 			pp.sendMessage(SlashServer.ALREADY_ON_SERVER.replace("{name}", serverName));
 		} else {
 			if (tasks.contains(pp)) {
 				pp.sendMessage(SlashServer.ALREADY_TELEPORTING.replace("{name}", serverName));
 				return;
 			}
-			
+
 			ServerInfo server = ProxyServer.getInstance().getServerInfo(serverName);
 			if (server == null) {
 				pp.sendMessage(SlashServer.UNKNOWN_SERVER.replace("{name}", serverName));
 				return;
 			}
-			
-			int waitingTime = SlashServer.INSTANCE.getWaitingDuration(serverName);
+
+			// the waiting time depends on the server the player is currently connected to, rather than the server he
+			// wants to connect to:
+			int waitingTime = SlashServer.INSTANCE.getWaitingDuration(currentServer);
 			if (waitingTime <= 0) {
 				pp.sendMessage(SlashServer.TELEPORTING_NOW.replace("{name}", serverName));
 				pp.connect(server);
