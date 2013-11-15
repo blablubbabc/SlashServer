@@ -35,26 +35,30 @@ public class SlashServer extends Plugin {
 		config = YamlConfiguration.loadConfiguration(configFile);
 		
 		// init config defaults:
-		initConfigDefault("ALREADY_ON_SERVER", "&cYou are already connected to server '&e{name}&c'!");
-		initConfigDefault("TELEPORTING_NOW", "&2You are now being sent to server '&e{name}&2'.");
-		initConfigDefault("TELEPORTING_LATER", "&2You are sent to server '&e{name}&2' in &e{seconds} seconds&2'.");
-		initConfigDefault("ALREADY_TELEPORTING", "&cYou are already in the progress of joining server '&e{name}&c'.");
-		initConfigDefault("UNKNOWN_SERVER", "&cThis server is unknown: '&e{name}&c'");
+		initConfigDefaultMessage("ALREADY_ON_SERVER", "&cYou are already connected to server '&e{name}&c'!");
+		initConfigDefaultMessage("TELEPORTING_NOW", "&2You are now being sent to server '&e{name}&2'.");
+		initConfigDefaultMessage("TELEPORTING_LATER", "&2You are sent to server '&e{name}&2' in &e{seconds} seconds&2'.");
+		initConfigDefaultMessage("ALREADY_TELEPORTING", "&cYou are already in the progress of joining server '&e{name}&c'.");
+		initConfigDefaultMessage("UNKNOWN_SERVER", "&cThis server is unknown: '&e{name}&c'");
+		
+		if (!config.isConfigurationSection("servers")) {
+			for (String serverName : ProxyServer.getInstance().getServers().keySet()) {
+				config.set("servers." + serverName, 0);
+			}
+		}
 		
 		// save the config:
 		try {
-            config.save(configFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+			config.save(configFile);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
 		// read config:
-
 		ConfigurationSection serversSection = config.getConfigurationSection("servers");
-		if (serversSection != null) {
-			for (String servername : serversSection.getKeys(false)){
-				time.put(servername, serversSection.getInt(servername));
-			}
+		assert serversSection != null;
+		for (String servername : serversSection.getKeys(false)){
+			time.put(servername, serversSection.getInt(servername));
 		}
 
 		// messages:
@@ -65,8 +69,8 @@ public class SlashServer extends Plugin {
 		UNKNOWN_SERVER = colorize(config.getString( "UNKNOWN_SERVER"));
 	}
 	
-	private void initConfigDefault(String path, Object value) {
-		if (!config.isSet(path)) config.set(path, value);
+	private void initConfigDefaultMessage(String path, Object value) {
+		if (!config.isString(path)) config.set(path, value);
 	}
 
 	public static String colorize(String input) {
